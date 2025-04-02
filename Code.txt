@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Hero Bot - Big Hero Robotics Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%);
+            background-size: 20px 20px;
+            animation: moveBackground 10s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 95%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .chat-header p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border-radius: 15px 15px 15px 5px;
+            padding: 8px 12px;
+            max-width: 70%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .bot-message::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 10px solid rgba(0, 0, 0, 0.5);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #007bff, #00bfff);
+            color: #fff;
+            border-radius: 15px 15px 5px 15px;
+            padding: 8px 12px;
+            max-width: 70%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .user-message::before {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right: 10px solid #007bff;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .bot-photo {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: #fff;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bot-photo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        /* User Input */
+        .user-input {
+            display: flex;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .user-input button {
+            background: linear-gradient(135deg, #007bff, #00bfff);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .user-input button:hover {
+            background: linear-gradient(135deg, #0056b3, #0080ff);
+        }
+
+        .user-input button#listenButton {
+            background: linear-gradient(135deg, #28a745, #00ff88);
+        }
+
+        .user-input button#listenButton:hover {
+            background: linear-gradient(135deg, #218838, #00cc66);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 600px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .chat-header {
+                padding: 10px;
+            }
+
+            .chat-header img {
+                width: 35px;
+                height: 35px;
+                top: 8px;
+                left: 10px;
+            }
+
+            .chat-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .chat-header p {
+                font-size: 0.75rem;
+            }
+
+            .chat-messages {
+                padding: 10px;
+            }
+
+            .bot-message, .user-message {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            .user-input input {
+                padding: 6px;
+                font-size: 0.85rem;
+            }
+
+            .user-input button {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .chat-header h2 {
+                font-size: 1rem;
+            }
+
+            .chat-header p {
+                font-size: 0.7rem;
+            }
+
+            .bot-message, .user-message {
+                font-size: 0.8rem;
+                padding: 5px 8px;
+            }
+
+            .user-input input {
+                padding: 5px;
+                font-size: 0.8rem;
+            }
+
+            .user-input button {
+                padding: 5px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://i.imgur.com/NloL8D8.jpg" alt="Big Hero Logo">
+            <h2>Big Hero Bot</h2>
+            <p>Your guide to Big Hero Robotics Academy</p>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="Type your question here...">
+            <button onclick="handleUserInput()" id="sendButton">Send</button>
+            <button onclick="startListening()" id="listenButton">🎙</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('chatMessages');
+        const inputField = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        const listenButton = document.getElementById('listenButton');
+
+        const botResponses = [
+            { keywords: ['big hero robotics academy', 'big hero', 'academy'], answer: "Big Hero Robotics Academy is a leading robotics education provider in Cairo, Egypt. We are committed to empowering underage students through project-based learning, exploration learning, generation-to-generation learning, and teamwork.<br><br>Our curriculum is designed to help students develop STEM skills, problem-solving skills, and critical thinking skills. We also focus on developing students' creativity and innovation skills.<br><br>We offer a variety of robotics courses for students of all ages and skill levels. Our courses are designed to be flexible and adaptable, so we can meet the needs of individual students and groups." },
+            { keywords: ['courses', 'offer', 'what courses'], answer: "We offer LEGO courses for students aged 5 to 10, Electronics courses for students aged 10 to 18, and Advanced robotics and AI courses for university students.<br><br>Our advanced courses include:<br>- Programming<br>- PCB fabrication<br>- Mobile app development<br>- Mechanical design" },
+            { keywords: ['price', 'cost', 'costs', 'pricing'], answer: "For Advanced courses, please contact us for the pricing details." },
+            { keywords: ['location', 'where', 'located'], answer: "Here is our location: <a href='https://maps.app.goo.gl/69kc91k7NEKHqtw9A' target='_blank'>View on Map</a>" },
+            { keywords: ['contact', 'number'], answer: "You can reach us at <a href='tel:+201080504838'>+201080504838</a> or on WhatsApp at <a href='https://wa.me/201080504838'>WhatsApp</a>." },
+            { keywords: ['sessions', 'more than one', 'multiple sessions'], answer: "If you want more than 1 session per week, please contact us for more information." },
+            { keywords: ['bye', 'goodbye'], answer: "Goodbye! Have a great day!" },
+            { keywords: ['hello', 'hi'], answer: "Hello! How can I assist you today?" },
+            { keywords: ['thanks', 'thank you'], answer: "You're welcome! Feel free to ask me anything." },
+            { keywords: ['what is you','What are you','who are you','who is you'], answer: "I'm Big Hero (Zayed)'s chatbot. Your guide to Big Hero Robotics Academy." },
+            { keywords: ['instructors'], answer: "<ul><li><strong>Mohamed Hany:</strong> Branch Manager.</li><li><strong>Omar Essam:</strong> Data Scientist & AI.</li><li><strong>Mohamed Tarek:</strong> Elec & Lego Instructor.</li><li><strong>Amr Tarek:</strong> Elec & Lego Instructor.</li><li><strong>Yehia ElTabba:</strong> Lego Instructor.</li><li><strong>Anas Amer:</strong> Assistant.</li></ul>" },
+            { keywords: ['what can add', 'me', 'my son'], answer: "The student at Big Hero will learn:<br>1. Programming & artificial intelligence, focusing on sequential and logical thinking.<br>2. Electronic circuits, sensor usage, and understanding their operation.<br>3. Advanced mechanical design and assembly, including understanding robot structures and mechanisms.<br>4. Project management skills and teamwork in a stimulating learning environment.<br>5. Developing presentation skills for projects.<br>6. Testing mechanisms and learning how to repair them to enhance students' understanding of technology." }
+        ];
+
+        let recognition;
+
+        const isSpeechRecognitionSupported = () => {
+            return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        };
+
+        const isSpeechSynthesisSupported = () => {
+            return 'speechSynthesis' in window;
+        };
+
+        const requestMicrophonePermission = async () => {
+            try {
+                await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log("Microphone access granted.");
+            } catch (error) {
+                console.error("Microphone access denied or not supported.", error);
+                alert("Please allow microphone access to use voice conversation. Click the microphone button to try again.");
+            }
+        };
+
+        const speechQueue = [];
+        let isSpeaking = false;
+
+        const speak = (text) => {
+            if (!isSpeechSynthesisSupported()) {
+                console.error("Speech synthesis is not supported in this browser.");
+                return;
+            }
+
+            speechQueue.push(text);
+            if (!isSpeaking) {
+                processSpeechQueue();
+            }
+        };
+
+        const processSpeechQueue = () => {
+            if (speechQueue.length > 0) {
+                isSpeaking = true;
+                const text = speechQueue.shift();
+                const utterance = new SpeechSynthesisUtterance();
+                utterance.text = text.replace(/<[^>]+>/g, '');
+                utterance.lang = 'en-US';
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    processSpeechQueue();
+                };
+                window.speechSynthesis.speak(utterance);
+            }
+        };
+
+        const addMessage = (content, type) => {
+            const message = document.createElement('div');
+            message.className = 'message';
+
+            const text = document.createElement('div');
+            text.className = type === 'bot' ? 'bot-message' : 'user-message';
+            text.innerHTML = content;
+
+            if (type === 'bot') {
+                const photo = document.createElement('div');
+                photo.className = 'bot-photo';
+                photo.innerHTML = "<img src='https://i.imgur.com/NloL8D8.jpg' alt='Bot Photo'>";
+                message.appendChild(photo);
+            }
+
+            message.appendChild(text);
+            messagesContainer.appendChild(message);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        const handleUserInput = () => {
+            const userInput = inputField.value.toLowerCase().trim();
+            if (userInput === "") return;
+
+            addMessage(userInput, 'user');
+            inputField.value = "";
+            inputField.disabled = true;
+            sendButton.disabled = true;
+
+            handleBotResponse(userInput);
+
+            setTimeout(() => {
+                inputField.disabled = false;
+                sendButton.disabled = false;
+                inputField.focus();
+            }, 500);
+        };
+
+        const handleBotResponse = (userInput) => {
+            const response = botResponses.find(response =>
+                response.keywords.some(keyword => userInput.includes(keyword))
+            );
+
+            if (response) {
+                addMessage(response.answer, 'bot');
+                speak(response.answer);
+            } else {
+                const unknownResponse = "Sorry, I didn't understand that. Can you please rephrase?";
+                addMessage(unknownResponse, 'bot');
+                speak(unknownResponse);
+            }
+        };
+
+        const startListening = () => {
+            if (!isSpeechRecognitionSupported()) {
+                alert("Speech recognition is not supported in this browser.");
+                return;
+            }
+
+            recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                listenButton.textContent = "🛑 Stop Listening";
+            };
+
+            recognition.onend = () => {
+                listenButton.textContent = "🎙 Listen";
+            };
+
+            recognition.onresult = (event) => {
+                const userInput = event.results[0][0].transcript.toLowerCase();
+                addMessage(userInput, 'user');
+                handleBotResponse(userInput);
+            };
+
+            recognition.start();
+        };
+
+        inputField.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+
+        window.onload = async () => {
+            addMessage("Welcome to Big Hero Robotics Academy! How can I assist you today?", 'bot');
+            await requestMicrophonePermission();
+            speak("Welcome to Big Hero Robotics Academy! How can I assist you today?");
+        };
+    </script>
+</body>
+</html>
